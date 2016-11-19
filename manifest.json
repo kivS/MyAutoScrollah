@@ -1,0 +1,31 @@
+{
+	"manifest_version": 2,
+	"name": "My AutoScroller",
+	"version": "1.0",
+
+	"description": "Will save your page location and scroll for you the next time you visit it",
+
+	"permissions": [
+	    "storage"
+	],
+
+	"browser_action": {
+	    "default_title": "Scroll, biatch!",      
+	    "default_popup": "popup.html"       
+	},
+
+	"background": {
+	   "scripts": ["libs/lokijs.min.js","background.js"],
+	   "persistent": false
+	},
+
+	"content_scripts": [
+	    {
+	      "matches": ["http://*/*", "https://*/*", "file:///*"],
+	      "js": ["content.js"],
+	      "run_at": "document_idle"
+	    }
+	]
+
+	
+}
