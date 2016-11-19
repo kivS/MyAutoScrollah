@@ -10,8 +10,11 @@ var $db = new loki('db.json',{
     autoload: true,
     autoloadCallback : function(){
 
-        // Collection to save pages locations
+        // If Collections are not present initialize them
        $locations = $db.getCollection('locations');
+
+       if(!$locations) $locations = $db.addCollection('locations');
+
     },
 });
 
