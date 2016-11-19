@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener(
     switch(request.what){
     	case "start_bot":
     		// check If page is already saved
-            var query = $locations.findOne({url: sender.url});  
+            var query = $locations.findOne({url: request.url});  
             if(query){
                 console.group('Saved page query result');
                 console.log('Query: ', query);
@@ -54,11 +54,11 @@ chrome.runtime.onMessage.addListener(
         case "echo_echo":
             // Get page location when user leaves tab or closes the page and save it..
             console.group('Page location to be saved');
-            console.log('URL: ', sender.url);
+            console.log('URL: ', request.url);
             console.log('ScrollY: ', request.scrollY);
             console.groupEnd();
 
-            savePageLocation(sender.url, request.scrollY);
+            savePageLocation(request.url, request.scrollY);
 
         break;
 
@@ -73,7 +73,12 @@ chrome.runtime.onMessage.addListener(
 
 
 
-
+/**
+ * Saves pages location to the DB
+ * @param  {[type]} url        --> url of page
+ * @param  {[type]} newScrollY --> new page Y location
+ * 
+ */
 function savePageLocation(url, newScrollY){
     console.group('Save page location');
     // check If page is already saved

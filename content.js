@@ -23,8 +23,8 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 chrome.runtime.sendMessage(
 	{
 		what: "start_bot",
-		scrollY: scrollY     // info about the Y distance travelled in this page
-
+		scrollY: scrollY,     // info about the Y distance travelled in this page
+		url: getPageUrl()   // current page url
 	},
 	function(response) {
 		console.group('Startup response');
@@ -68,6 +68,16 @@ function travelY(y){
 
 	scrollTo(0, y);
 
+	//make sure it scrolls..
+	setTimeout(() => {
+		
+		if(scrollY != y){
+			window.scrollTo(0, y);
+			console.log('I was forced to scroll yo..');
+		}
+
+	}, 500);
+
 	console.groupEnd();
 }
 
@@ -79,8 +89,8 @@ function sendPageLocation(){
 	chrome.runtime.sendMessage(
 		{
 			what: "echo_echo",
-			scrollY: scrollY     // info about the Y distance travelled in this page
-
+			scrollY: scrollY,     // info about the Y distance travelled in this page
+			url: getPageUrl()	// current page url
 		}
 	);
 }
@@ -108,3 +118,12 @@ function handleVisibilityChange(){
 function handlePageUnload(){
 	sendPageLocation();
 }
+
+/**
+ * Get current page url
+ * @return {[string]} --> filtered url
+ */
+function getPageUrl(){
+	return location.origin + location.pathname;
+}
+
