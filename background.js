@@ -12,8 +12,10 @@ var $db = new loki('db.json',{
 
         // If Collections are not present initialize them
        $locations = $db.getCollection('locations');
+       $tracked_pages = $db.getCollection('tracked_pages');
 
        if(!$locations) $locations = $db.addCollection('locations');
+       if(!$tracked_pages) $tracked_pages = $db.addCollection('tracked_pages');
 
     },
 });
@@ -62,6 +64,14 @@ chrome.runtime.onMessage.addListener(
 
         break;
 
+        case "track_page":
+            trackPage(request.url);
+        break;
+
+        case "untrack_page":
+            untrackPage(request.url);
+        break;
+
     	default:
     		sendResponse({changes: false});
     }
@@ -99,4 +109,26 @@ function savePageLocation(url, newScrollY){
 
    
     console.groupEnd();  
+}
+
+/**
+ * Ads page's url to tracked_pages DB
+ * @param  {[string]} url 
+ */
+function trackPage(url){
+    $tracked_pages.insertOne({page_url: url});
+    console.group('Track page');
+    console.log('tracking: ', url);
+    console.groupEnd();
+}
+
+/**
+ * Removes page's url from tracked_pages DB
+ * @param  {[url]} url 
+ */
+function untrackPage(url){
+    $tracked_pages.removeWhere({page_url: url});
+    console.group('Untrack page');
+    console.log('untracked: ', url);
+    console.groupEnd();
 }

@@ -2,18 +2,49 @@ console.log("Hello world /... not! from popup");
 
 
 // Get btn 
-var el = document.getElementById('btn');
-el.addEventListener('click', function(e){
-	
-	chrome.runtime.sendMessage(
-		{
-			greeting: "hello",
-			type: "anotha biatch"
+document.getElementById('track').addEventListener('click', doPage, false);
+document.getElementById('untrack').addEventListener('click', doPage, false);
 
-		},
-		function(response) {
-	  		console.log(response);
-	  	}
-	);
+/**
+ * Get page info and track/untrack it
+ * @param  {[type]} e  --> event object
+ */
+function doPage(e){
+	console.group('Buttons events');
+	console.log(e.target.id);
+	console.groupEnd();
 
-}, false);
+	// Get page info from content script && procede to do bussiness
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+	  chrome.tabs.sendMessage(tabs[0].id, {what: "page_info"}, function(response) {
+	    console.group('Requesting page info from content script');
+	    console.log(response);
+	    console.groupEnd();
+
+	    switch(e.target.id){
+	    	case 'track':
+	    		// send request to track page to background script
+	    		chrome.runtime.sendMessage(
+	    			{
+	    				what: "track_page",
+	    				url: response.page_url
+	    				
+	    			}
+	    		);
+	    	break;
+
+	    	case 'untrack':
+	    		// send request to untrack page to background script
+	    		chrome.runtime.sendMessage(
+	    			{
+	    				what: "untrack_page",
+	    				url: response.page_url
+	    				
+	    			}
+	    		);
+	    	break;
+	    }
+
+	  });
+	});
+}
