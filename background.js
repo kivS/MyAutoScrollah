@@ -100,13 +100,15 @@ function savePageLocation(url, newScrollY){
        $locations.update(query);
     }
 
-    // If it's a new page let's save it
-    if(!query){
+    // If it's a new page && it's being tracked then let's save it
+    // 
+    var isPageBeingTracked = isPageTracked(url);
+    if(!query && isPageBeingTracked){
         console.log('A new entry it is. INSERT NEW');
         $locations.insertOne({url:url, scrollY: newScrollY});
     }
 
-
+    console.log('isPageBeingTracked: ', isPageBeingTracked);
    
     console.groupEnd();  
 }
@@ -128,7 +130,21 @@ function trackPage(url){
  */
 function untrackPage(url){
     $tracked_pages.removeWhere({page_url: url});
+    $locations.removeWhere({url: url});
     console.group('Untrack page');
     console.log('untracked: ', url);
     console.groupEnd();
+}
+
+/**
+ * Checks $tracked_pages DB to assert if page's being tracked
+ * @param  {[url]}  url 
+ * @return {Boolean}     
+ */
+function isPageTracked(url){
+    var query = $tracked_pages.findOne({page_url: url});
+    if(query) return true;
+
+    // If page is not being tracked
+    return false;
 }
