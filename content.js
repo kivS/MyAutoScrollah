@@ -69,14 +69,7 @@ function travelY(y){
 	scrollTo(0, y);
 
 	//make sure it scrolls..
-	setTimeout(() => {
-		
-		if(scrollY != y){
-			window.scrollTo(0, y);
-			console.log('I was forced to scroll yo..');
-		}
-
-	}, 500);
+	forceScroll(y);
 
 	console.groupEnd();
 }
@@ -127,3 +120,20 @@ function getPageUrl(){
 	return location.origin + location.pathname;
 }
 
+/**
+ * Force page to scroll..
+ * @param  {[type]} y [description]
+ * @return {[type]}   [description]
+ */
+function forceScroll(y){
+	setTimeout(() => {
+		
+		if(scrollY != y){
+			window.scrollTo(0, y);
+			console.log('I was forced to scroll yo..');
+			// To the rabbit hole we go
+			forceScroll(y);
+		}
+
+	}, 1);
+}
