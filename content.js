@@ -18,6 +18,30 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 }
 
 
+// Message station - alllll aboard!
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+  	//
+    console.group("Incoming messages");
+    console.log('Request: ', request);
+    console.log('Sender: ', sender);
+    console.groupEnd();
+    //
+   
+    // 
+    switch(request.what){
+  
+        case "page_info":
+            // Request current page info
+           sendResponse({page_url: getPageUrl()});
+        break;
+
+    	default:
+    		break;
+    }
+
+ });
+
 
 // Start up && send some info about page
 chrome.runtime.sendMessage(
@@ -50,7 +74,7 @@ if (typeof document.addEventListener === "undefined" || typeof document[hidden] 
   document.addEventListener(visibilityChange, handleVisibilityChange, false);
 }
 
-// Handle page visibility change   
+// Handle page unload event   
 window.onbeforeunload = handlePageUnload;
 
 
@@ -135,5 +159,5 @@ function forceScroll(y){
 			forceScroll(y);
 		}
 
-	}, 1);
+	}, 10);
 }
