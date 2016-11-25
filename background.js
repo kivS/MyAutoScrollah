@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener(
    
     // 
     switch(request.what){
-    	case "start_bot":
+    	case "START_BOT":
     		// check If page is already saved
             var query = $locations.findOne({url: request.url});  
             if(query){
@@ -53,7 +53,7 @@ chrome.runtime.onMessage.addListener(
             sendResponse({changes: false});
     	break;
 
-        case "echo_echo":
+        case "ECHO_ECHO":
             // Get page location when user leaves tab or closes the page and save it..
             console.group('Page location to be saved');
             console.log('URL: ', request.url);
@@ -64,11 +64,11 @@ chrome.runtime.onMessage.addListener(
 
         break;
 
-        case "track_page":
+        case "TRACK_PAGE":
             trackPage(request.url);
         break;
 
-        case "untrack_page":
+        case "UNTRACK_PAGE":
             untrackPage(request.url);
         break;
 

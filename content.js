@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(
     // 
     switch(request.what){
   
-        case "page_info":
+        case "PAGE_INFO":
             // Request current page info
            sendResponse({page_url: getPageUrl()});
         break;
@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener(
 // Start up && send some info about page
 chrome.runtime.sendMessage(
 	{
-		what: "start_bot",
+		what: "START_BOT",
 		scrollY: scrollY,     // info about the Y distance travelled in this page
 		url: getPageUrl()   // current page url
 	},
@@ -105,7 +105,7 @@ function travelY(y){
 function sendPageLocation(){
 	chrome.runtime.sendMessage(
 		{
-			what: "echo_echo",
+			what: "ECHO_ECHO",
 			scrollY: scrollY,     // info about the Y distance travelled in this page
 			url: getPageUrl()	// current page url
 		}
