@@ -47,6 +47,7 @@ chrome.runtime.onMessage.addListener(
                 sendResponse({
                     changes: true,
                     newScrollY: query.scrollY,
+                    oldScrollY: query.lastScrollY
                 });
                 break;
             }
@@ -96,6 +97,7 @@ function savePageLocation(url, newScrollY){
     if(query && newScrollY != query.scrollY){
 
        console.log('url exists and location is diferent. UPDATE');
+       query.lastScrollY = query.scrollY;
        query.scrollY = newScrollY;
        $locations.update(query);
     }
@@ -105,7 +107,7 @@ function savePageLocation(url, newScrollY){
     var isPageBeingTracked = isPageTracked(url);
     if(!query && isPageBeingTracked){
         console.log('A new entry it is. INSERT NEW');
-        $locations.insertOne({url:url, scrollY: newScrollY});
+        $locations.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
     }
 
     console.log('isPageBeingTracked: ', isPageBeingTracked);

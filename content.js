@@ -56,7 +56,7 @@ chrome.runtime.sendMessage(
 		console.groupEnd();
 
 		if(response.changes){
-			travelY(response.newScrollY);
+			travelY(response.newScrollY, response.oldScrollY);
 		}
   	}
 );
@@ -85,15 +85,20 @@ window.onbeforeunload = handlePageUnload;
  * @param  {[integer]} y  --> new coord
  *  
  */
-function travelY(y){
+function travelY(y, oldY){
 	console.group('TravelY - Scroll page to new Y');
-	console.log('current Y: ', scrollY);
-	console.log('new Y: ', y);
+	console.log('current page Y: ', window.scrollY);
+	console.log('newY: ', y);
+	console.log('oldY: ', oldY);
 
-	scrollTo(0, y);
+	// If oldY > 0 and newY is 0 something went down... so let's scroll to olY instead..
+	var scrollY = (y == 0 && oldY > 0) ? oldY:y;
+	console.log('newY or oldY: ', scrollY);
+
+	scrollTo(0, scrollY);
 
 	//make sure it scrolls..
-	forceScroll(y);
+	forceScroll(scrollY);
 
 	console.groupEnd();
 }
