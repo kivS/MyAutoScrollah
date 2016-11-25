@@ -16,7 +16,7 @@ function doPage(e){
 
 	// Get page info from content script && procede to do bussiness
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-	  chrome.tabs.sendMessage(tabs[0].id, {what: "page_info"}, function(response) {
+	  chrome.tabs.sendMessage(tabs[0].id, {what: "PAGE_INFO"}, function(response) {
 	    console.group('Requesting page info from content script');
 	    console.log(response);
 	    console.groupEnd();
@@ -26,7 +26,7 @@ function doPage(e){
 	    		// send request to track page to background script
 	    		chrome.runtime.sendMessage(
 	    			{
-	    				what: "track_page",
+	    				what: "TRACK_PAGE",
 	    				url: response.page_url
 	    				
 	    			}
@@ -37,7 +37,7 @@ function doPage(e){
 	    		// send request to untrack page to background script
 	    		chrome.runtime.sendMessage(
 	    			{
-	    				what: "untrack_page",
+	    				what: "UNTRACK_PAGE",
 	    				url: response.page_url
 	    				
 	    			}

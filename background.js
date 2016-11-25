@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener(
    
     // 
     switch(request.what){
-    	case "start_bot":
+    	case "START_BOT":
     		// check If page is already saved
             var query = $locations.findOne({url: request.url});  
             if(query){
@@ -47,13 +47,14 @@ chrome.runtime.onMessage.addListener(
                 sendResponse({
                     changes: true,
                     newScrollY: query.scrollY,
+                    oldScrollY: query.lastScrollY
                 });
                 break;
             }
             sendResponse({changes: false});
     	break;
 
-        case "echo_echo":
+        case "ECHO_ECHO":
             // Get page location when user leaves tab or closes the page and save it..
             console.group('Page location to be saved');
             console.log('URL: ', request.url);
@@ -64,11 +65,11 @@ chrome.runtime.onMessage.addListener(
 
         break;
 
-        case "track_page":
+        case "TRACK_PAGE":
             trackPage(request.url);
         break;
 
-        case "untrack_page":
+        case "UNTRACK_PAGE":
             untrackPage(request.url);
         break;
 
@@ -96,6 +97,7 @@ function savePageLocation(url, newScrollY){
     if(query && newScrollY != query.scrollY){
 
        console.log('url exists and location is diferent. UPDATE');
+       query.lastScrollY = query.scrollY;
        query.scrollY = newScrollY;
        $locations.update(query);
     }
@@ -105,7 +107,7 @@ function savePageLocation(url, newScrollY){
     var isPageBeingTracked = isPageTracked(url);
     if(!query && isPageBeingTracked){
         console.log('A new entry it is. INSERT NEW');
-        $locations.insertOne({url:url, scrollY: newScrollY});
+        $locations.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
     }
 
     console.log('isPageBeingTracked: ', isPageBeingTracked);
