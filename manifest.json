@@ -6,7 +6,8 @@
 	"description": "Will save your page location and scroll for you the next time you visit it",
 
 	"permissions": [
-	    "storage"
+	    "storage",
+	    "tabs"
 	],
 
 	"browser_action": {

@@ -10,17 +10,38 @@ var $db = new loki('db.json',{
     autoload: true,
     autoloadCallback : function(){
 
-        // If Collections are not present initialize them
+        
        $locations = $db.getCollection('locations');
        $tracked_pages = $db.getCollection('tracked_pages');
 
+       // If Collections are not present initialize them
        if(!$locations) $locations = $db.addCollection('locations');
        if(!$tracked_pages) $tracked_pages = $db.addCollection('tracked_pages');
 
     },
 });
 
+// Show visual cue  to users
+chrome.tabs.onActivated.addListener(r => {
+    // Get current tab's url
+    console.group('Visual Cues');
+   
+    chrome.tabs.query({active:true}, t => {
+        var currentTabUrl = t[0].url;
+        console.log('Current Tab url: ', currentTabUrl);
 
+        if(isPageTracked(currentTabUrl)){
+            console.log('Page is being tracked...');
+            setBadgeOn();
+
+        }else{
+            console.log('Page not tracked...');
+            setBadgeOff();
+        }
+    });
+
+    console.groupEnd();
+});
 
 
 // Message station - alllll aboard!
@@ -39,6 +60,7 @@ chrome.runtime.onMessage.addListener(
     		// check If page is already saved
             var query = $locations.findOne({url: request.url});  
             if(query){
+                
                 console.group('Saved page query result');
                 console.log('Query: ', query);
                 console.groupEnd();
@@ -51,6 +73,7 @@ chrome.runtime.onMessage.addListener(
                 });
                 break;
             }
+            
             sendResponse({changes: false});
     	break;
 
@@ -124,6 +147,7 @@ function trackPage(url){
     console.group('Track page');
     console.log('tracking: ', url);
     console.groupEnd();
+    
 }
 
 /**
@@ -136,6 +160,7 @@ function untrackPage(url){
     console.group('Untrack page');
     console.log('untracked: ', url);
     console.groupEnd();
+
 }
 
 /**
@@ -149,4 +174,21 @@ function isPageTracked(url){
 
     // If page is not being tracked
     return false;
+}
+
+/**
+ * Changes badge's text to ON && color to green
+ */
+function setBadgeOn(){
+    chrome.browserAction.setBadgeText({text: 'ON'});
+    chrome.browserAction.setBadgeBackgroundColor({color: 'green'});
+
+}
+
+/**
+ * Changes badge's text to OFF && color to red
+ */
+function setBadgeOff(){
+    chrome.browserAction.setBadgeText({text: 'OFF'});
+    chrome.browserAction.setBadgeBackgroundColor({color: 'red'});
 }
