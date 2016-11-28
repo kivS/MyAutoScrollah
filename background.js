@@ -28,6 +28,8 @@ chrome.tabs.onActivated.addListener(r => {
    
     chrome.tabs.query({active:true}, t => {
         var currentTabUrl = t[0].url;
+        // clean url
+        currentTabUrl = currentTabUrl.split('#')[0];
         console.log('Current Tab url: ', currentTabUrl);
 
         if(isPageTracked(currentTabUrl)){
