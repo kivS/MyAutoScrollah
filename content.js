@@ -18,6 +18,24 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 }
 
 
+// ##  If user supports visibility API let's added it right?!
+// 
+// Warn if the browser doesn't support addEventListener or the Page Visibility API
+if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
+
+  console.error("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+
+} else {
+
+  // Handle page visibility change   
+  document.addEventListener(visibilityChange, handleVisibilityChange, false);
+}
+
+// Handle page unload event   
+window.onbeforeunload = handlePageUnload;
+
+
+
 // Message station - alllll aboard!
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -60,22 +78,6 @@ chrome.runtime.sendMessage(
 		}
   	}
 );
-
-// ##  If user supports visibility API let's added it right?!
-// 
-// Warn if the browser doesn't support addEventListener or the Page Visibility API
-if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
-
-  console.error("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
-
-} else {
-
-  // Handle page visibility change   
-  document.addEventListener(visibilityChange, handleVisibilityChange, false);
-}
-
-// Handle page unload event   
-window.onbeforeunload = handlePageUnload;
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------

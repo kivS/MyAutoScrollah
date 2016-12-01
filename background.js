@@ -21,7 +21,7 @@ var $db = new loki('db.json',{
     },
 });
 
-// Show visual cue  to users
+// Show visual cue  to users when they change to current tab
 chrome.tabs.onActivated.addListener(r => {
     // Get current tab's url
     console.group('Visual Cues');
@@ -149,6 +149,7 @@ function trackPage(url){
     console.group('Track page');
     console.log('tracking: ', url);
     console.groupEnd();
+    setBadgeOn();
     
 }
 
@@ -162,6 +163,7 @@ function untrackPage(url){
     console.group('Untrack page');
     console.log('untracked: ', url);
     console.groupEnd();
+    setBadgeOff();
 
 }
 
