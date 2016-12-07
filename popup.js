@@ -1,5 +1,30 @@
 console.log("Hello world /... not! from popup");
 
+// get background page ref
+var BG;
+chrome.runtime.getBackgroundPage(bg => { BG = bg });
+
+
+
+// Manage visuals according with whether the page is being tracked or not
+console.group('Manage visuals according with tracking status of page');
+// get current tab and set url var
+chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+	var tab_url = tabs[0].url;
+	console.log('tab url: ', tab_url);
+
+	// check if tab_url is being tracked or not
+	if(BG.isPageTracked(tab_url)){
+		console.log('Current tab is being tracked.');
+		document.getElementById('untrack').style.display = 'block';
+	}else{
+		console.log('Current tab is not being tracked..');
+		document.getElementById('track').style.display = 'block';
+	}
+	
+});
+console.groupEnd(); 
+
 
 // Get btn 
 document.getElementById('track').addEventListener('click', doPage, false);
