@@ -90,14 +90,6 @@ chrome.runtime.onMessage.addListener(
 
         break;
 
-        case "TRACK_PAGE":
-            trackPage(request.url);
-        break;
-
-        case "UNTRACK_PAGE":
-            untrackPage(request.url);
-        break;
-
     	default:
     		sendResponse({changes: false});
     }
