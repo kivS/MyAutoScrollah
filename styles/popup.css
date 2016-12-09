@@ -1,0 +1,22 @@
+button{
+  margin: 10px auto;
+  border: none;
+  padding: 5px 5px;
+  width: 150px;
+  height: 50px;
+  font-family: sans-serif;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+button#track{
+  background-color: #2E7D32;
+  color: white;
+}
+
+
+button#untrack{
+  background-color: #E53935;
+  color: white;
+}
+
