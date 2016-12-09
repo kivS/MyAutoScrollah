@@ -90,14 +90,6 @@ chrome.runtime.onMessage.addListener(
 
         break;
 
-        case "TRACK_PAGE":
-            trackPage(request.url);
-        break;
-
-        case "UNTRACK_PAGE":
-            untrackPage(request.url);
-        break;
-
     	default:
     		sendResponse({changes: false});
     }
@@ -185,7 +177,7 @@ function isPageTracked(url){
  */
 function setBadgeOn(){
     chrome.browserAction.setBadgeText({text: 'ON'});
-    chrome.browserAction.setBadgeBackgroundColor({color: 'green'});
+    chrome.browserAction.setBadgeBackgroundColor({color: '#2E7D32'});
 
 }
 
@@ -194,5 +186,5 @@ function setBadgeOn(){
  */
 function setBadgeOff(){
     chrome.browserAction.setBadgeText({text: 'OFF'});
-    chrome.browserAction.setBadgeBackgroundColor({color: 'red'});
+    chrome.browserAction.setBadgeBackgroundColor({color: '#E53935'});
 }

@@ -35,32 +35,6 @@ if (typeof document.addEventListener === "undefined" || typeof document[hidden] 
 window.onbeforeunload = handlePageUnload;
 
 
-
-// Message station - alllll aboard!
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	//
-    console.group("Incoming messages");
-    console.log('Request: ', request);
-    console.log('Sender: ', sender);
-    console.groupEnd();
-    //
-   
-    // 
-    switch(request.what){
-  
-        case "PAGE_INFO":
-            // Request current page info
-           sendResponse({page_url: getPageUrl()});
-        break;
-
-    	default:
-    		break;
-    }
-
- });
-
-
 // Start up && send some info about page
 chrome.runtime.sendMessage(
 	{
