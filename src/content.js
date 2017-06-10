@@ -1,4 +1,3 @@
-console.log("Hello world ... not! from content script");
 // ## VISIBILITY API BROWSER CONFIG ##
 // 
 // Set the name of the hidden property and the change event for visibility
@@ -15,18 +14,18 @@ else if (typeof document.webkitHidden !== "undefined") {
     hidden = "webkitHidden";
     visibilityChange = "webkitvisibilitychange";
 }
-// ##  If user supports visibility API let's added it right?!
-// 
-// Warn if the browser doesn't support addEventListener or the Page Visibility API
-if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
-    console.error("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
-}
-else {
-    // Handle page visibility change   
-    document.addEventListener(visibilityChange, handleVisibilityChange, false);
-}
+// Handle page visibility change   
+document.addEventListener(visibilityChange, function () {
+    console.group('Page visibility API');
+    console.log('Page visibility: ', document.visibilityState);
+    //document.title = document.visibilityState;
+    console.groupEnd();
+    if (document[hidden]) {
+        sendPageLocation();
+    }
+}, false);
 // Handle page unload event   
-window.onbeforeunload = handlePageUnload;
+window.onbeforeunload = sendPageLocation;
 // Start up && send some info about page
 chrome.runtime.sendMessage({
     what: "START_BOT",
@@ -69,19 +68,6 @@ function sendPageLocation() {
         scrollY: scrollY,
         url: getPageUrl() // current page url
     });
-}
-/**
- * If user changes tab let's record his page position shall we?!
- *
- */
-function handleVisibilityChange() {
-    console.group('Page visibility API');
-    console.log('Page visibility: ', document.visibilityState);
-    //document.title = document.visibilityState;
-    console.groupEnd();
-    if (document[hidden]) {
-        sendPageLocation();
-    }
 }
 /**
  * If user closes page let's save latest location shall we

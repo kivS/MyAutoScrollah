@@ -1,4 +1,3 @@
-console.log("Hello world ... not! from content script");
 
 // ## VISIBILITY API BROWSER CONFIG ##
 // 
@@ -18,21 +17,25 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 }
 
 
-// ##  If user supports visibility API let's added it right?!
-// 
-// Warn if the browser doesn't support addEventListener or the Page Visibility API
-if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
 
-  console.error("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
 
-} else {
+// Handle page visibility change   
+document.addEventListener(visibilityChange, function(){
 
-  // Handle page visibility change   
-  document.addEventListener(visibilityChange, handleVisibilityChange, false);
-}
+	console.group('Page visibility API');
+	console.log('Page visibility: ', document.visibilityState);
+	//document.title = document.visibilityState;
+	console.groupEnd();
 
-// Handle page unload event   
-window.onbeforeunload = handlePageUnload;
+	if(document[hidden]){
+		sendPageLocation();
+	}
+
+}, false);
+
+
+// On page unload send page y location to be saved
+window.onbeforeunload = sendPageLocation;
 
 
 // Start up && send some info about page
@@ -94,28 +97,6 @@ function sendPageLocation(){
 }
 
 
-/**
- * If user changes tab let's record his page position shall we?!
- * 
- */
-function handleVisibilityChange(){
-	console.group('Page visibility API');
-	console.log('Page visibility: ', document.visibilityState);
-	//document.title = document.visibilityState;
-	console.groupEnd();
-
-	if(document[hidden]){
-		sendPageLocation();
-	}
-}
-
-/**
- * If user closes page let's save latest location shall we
- * 
- */
-function handlePageUnload(){
-	sendPageLocation();
-}
 
 /**
  * Get current page url
