@@ -73,6 +73,7 @@ chrome.runtime.onMessage.addListener(
                     newScrollY: query.scrollY,
                     oldScrollY: query.lastScrollY
                 });
+                setBadgeOn();
                 break;
             }
             
