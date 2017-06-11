@@ -38,17 +38,16 @@ chrome.runtime.sendMessage(
 
 /**
  * Scroll page vertically to determined coord
- * @param  {[integer]} y  --> new coord
  *  
  */
-function travelY(y, oldY){
+function travelY(y: number, oldY: number){
 	console.group('TravelY - Scroll page to new Y');
 	console.log('current page Y: ', window.scrollY);
 	console.log('newY: ', y);
 	console.log('oldY: ', oldY);
 
 	// If oldY > 0 and newY is 0 something went down... so let's scroll to olY instead..
-	var scrollY = (y == 0 && oldY > 0) ? oldY:y;
+	const scrollY = (y == 0 && oldY > 0) ? oldY:y;
 	console.log('newY or oldY: ', scrollY);
 
 	scrollTo(0, scrollY);
@@ -79,16 +78,14 @@ function sendPageLocation(){
  * Get current page url
  * @return {[string]} --> filtered url
  */
-function getPageUrl(){
+function getPageUrl(): string{
 	return location.origin + location.pathname;
 }
 
 /**
  * Force page to scroll..
- * @param  {[type]} y [description]
- * @return {[type]}   [description]
  */
-function forceScroll(y){
+function forceScroll(y: number){
 	setTimeout(() => {
 		
 		if(scrollY != y){

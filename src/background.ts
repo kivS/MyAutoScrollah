@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener(
     switch(request.what){
     	case "START_BOT":
     		// check If page is already saved
-            var query = $sites.findOne({url: request.url});  
+            const query = $sites.findOne({url: request.url});  
             if(query){
                 console.log('START_BOT - query result: ', query);
 
@@ -94,14 +94,12 @@ chrome.runtime.onMessage.addListener(
 
 /**
  * Saves pages location to the DB
- * @param  {[type]} url        --> url of page
- * @param  {[type]} newScrollY --> new page Y location
  * 
  */
-function savePageLocation(url, newScrollY){
+function savePageLocation(url: string, newScrollY: number){
     console.group('Save page location');
    
-    var query = $sites.findOne({url: url});
+    let query = $sites.findOne({url: url});
 
      // check If page is already saved
     if(query && newScrollY != query.scrollY){
@@ -153,7 +151,7 @@ function untrackPage(url){
  * @return {Boolean}     
  */
 function isPageTracked(url: string): boolean{
-    var query = $sites.findOne({'url': url});
+    const query = $sites.findOne({'url': url});
     if(query) return true;
 
     // If page is not being tracked
