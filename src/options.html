@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Skrolly Options</title>
+  <style>
+
+    body: { padding: 10px; }
+
+    table{
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td, th{
+      border: 1px solid  #dddddd;
+      padding: 8px;
+    }
+
+    .btnDelete{
+      border: none;
+    }
+
+    td:nth-child(even){
+      text-align: center;
+    }
+    
+  </style>
+
+</head>
+
+<body>
+
+  <table id="pageList">
+    <caption>
+      <h4 id="pageListCaption">List of pages being tracked</h4>
+    </caption>
+    <tr>
+      <th>Site</th>
+      <th>Action</th>
+    </tr>
+  </table>
+
+  <script src="options.js"></script>
+</body>
+</html>

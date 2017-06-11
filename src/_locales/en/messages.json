@@ -17,6 +17,22 @@
     "trackBtn": {
         "message": "Track page",
         "description": "Popup - innerHtml of track button"
+    },
+
+    "optionsNoSitesMsg": {
+        "message": "Track page",
+        "description": "options page - Message for when there's no site being tracked"
+    },
+
+    "btnDelete": {
+        "message": "Delete",
+        "description": "Button delete text"
+    },
+
+    "pageListTableCaption": {
+        "message": "List of pages being tracked",
+        "description": "options page - Table list caption"
     }
+
 
 }
