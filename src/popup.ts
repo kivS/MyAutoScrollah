@@ -9,6 +9,7 @@ chrome.runtime.getBackgroundPage(bg => { BG = bg });
 console.group('Manage visuals according with tracking status of page');
 // get current tab and set url var
 chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+    
 	TAB_URL = BG.getCleanUrl(tabs[0].url);
 	console.log('tab url: ', TAB_URL);
 

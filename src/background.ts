@@ -6,34 +6,29 @@ const $db = new loki('db.json',{
     autosave: true,
     autoload: true,
     autoloadCallback : function(){
-
         
        $sites = $db.getCollection('sites');
 
        // If Collections are not present initialize them
        if(!$sites) $sites = $db.addCollection('sites');
-
     },
 });
 
 // Show visual cue  to users when they change to current tab
 chrome.tabs.onActivated.addListener(r => {
-    // Get current tab's url
-    console.group('Visual Cues');
-   
+
+    // Get current tab's url   
     chrome.tabs.query({active:true}, t => {
 
         // get cleaned url
         const currentTabUrl = getCleanUrl(t[0].url);
-        
-        console.log('Current Tab url: ', currentTabUrl);
 
         if(isPageTracked(currentTabUrl)){
-            console.log('Page is being tracked...');
+            console.log(`On tab activated - Page [${currentTabUrl}] is being tracked...`);
             setBadgeOn();
 
         }else{
-            console.log('Page not tracked...');
+            console.log(`On tab activated - Page [${currentTabUrl}] not tracked...`);
             setBadgeOff();
         }
     });
@@ -46,7 +41,7 @@ chrome.tabs.onActivated.addListener(r => {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
   	//
-    console.group("Incoming messages");
+    console.group("BG: Incoming messages");
     console.log('Request: ', request);
     console.log('Sender: ', sender);
     console.groupEnd();
@@ -58,10 +53,7 @@ chrome.runtime.onMessage.addListener(
     		// check If page is already saved
             var query = $sites.findOne({url: request.url});  
             if(query){
-                
-                console.group('Saved page query result');
-                console.log('Query: ', query);
-                console.groupEnd();
+                console.log('START_BOT - query result: ', query);
 
                 // Send back info to be scrolled
                 sendResponse({
@@ -80,7 +72,7 @@ chrome.runtime.onMessage.addListener(
 
         case "ECHO_ECHO":
             // Get page location when user leaves tab or closes the page and save it..
-            console.group('Page location to be saved');
+            console.group('ECHO_ECHO - save location of site:');
             console.log('URL: ', request.url);
             console.log('ScrollY: ', request.scrollY);
             console.groupEnd();
@@ -108,9 +100,10 @@ chrome.runtime.onMessage.addListener(
  */
 function savePageLocation(url, newScrollY){
     console.group('Save page location');
-    // check If page is already saved
+   
     var query = $sites.findOne({url: url});
 
+     // check If page is already saved
     if(query && newScrollY != query.scrollY){
        console.log('url exists and location is diferent. UPDATE');
        query.lastScrollY = query.scrollY;
@@ -120,7 +113,8 @@ function savePageLocation(url, newScrollY){
 
     // If it's a new page && it's being tracked then let's save it
     // 
-    var isPageBeingTracked = isPageTracked(url);
+    const isPageBeingTracked = isPageTracked(url);
+
     if(!query && isPageBeingTracked){
         console.log('A new entry it is. INSERT NEW');
         $sites.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
@@ -137,9 +131,7 @@ function savePageLocation(url, newScrollY){
  */
 function trackPage(url){
     $sites.insertOne({'url': url});
-    console.group('Track page');
     console.log('tracking: ', url);
-    console.groupEnd();
     setBadgeOn();
     
 }
@@ -150,9 +142,7 @@ function trackPage(url){
  */
 function untrackPage(url){
     $sites.removeWhere({'url': url});
-    console.group('Untrack page');
     console.log('untracked: ', url);
-    console.groupEnd();
     setBadgeOff();
 
 }
