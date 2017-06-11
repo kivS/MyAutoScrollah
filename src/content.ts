@@ -22,10 +22,8 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 // Handle page visibility change   
 document.addEventListener(visibilityChange, function(){
 
-	console.group('Page visibility API');
-	console.log('Page visibility: ', document.visibilityState);
+	console.debug('Page visibility: ', document.visibilityState);
 	//document.title = document.visibilityState;
-	console.groupEnd();
 
 	if(document[hidden]){
 		sendPageLocation();
@@ -46,9 +44,8 @@ chrome.runtime.sendMessage(
 		url: getPageUrl()   // current page url
 	},
 	function(response) {
-		console.group('Startup response');
-		console.log('Response: ', response);
-		console.groupEnd();
+
+		console.debug('START_BOT response: ', response);
 
 		if(response.changes){
 			travelY(response.newScrollY, response.oldScrollY);
@@ -116,7 +113,7 @@ function forceScroll(y){
 		
 		if(scrollY != y){
 			window.scrollTo(0, y);
-			console.log('I was forced to scroll yo..');
+			console.debug('I was forced to scroll yo..');
 			// To the rabbit hole we go
 			forceScroll(y);
 		}

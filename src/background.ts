@@ -2,7 +2,7 @@ console.log("hey there from background.js");
 
 
 // DB INIT
-var $locations;
+let $sites;
 var $db = new loki('db.json',{
     env: 'BROWSER',
     verbose: true,
@@ -11,12 +11,10 @@ var $db = new loki('db.json',{
     autoloadCallback : function(){
 
         
-       $locations = $db.getCollection('locations');
-       $tracked_pages = $db.getCollection('tracked_pages');
+       $sites = $db.getCollection('sites');
 
        // If Collections are not present initialize them
-       if(!$locations) $locations = $db.addCollection('locations');
-       if(!$tracked_pages) $tracked_pages = $db.addCollection('tracked_pages');
+       if(!$sites) $sites = $db.addCollection('sites');
 
     },
 });
@@ -60,7 +58,7 @@ chrome.runtime.onMessage.addListener(
     switch(request.what){
     	case "START_BOT":
     		// check If page is already saved
-            var query = $locations.findOne({url: request.url});  
+            var query = $sites.findOne({url: request.url});  
             if(query){
                 
                 console.group('Saved page query result');
@@ -73,6 +71,8 @@ chrome.runtime.onMessage.addListener(
                     newScrollY: query.scrollY,
                     oldScrollY: query.lastScrollY
                 });
+
+
                 setBadgeOn();
                 break;
             }
@@ -111,13 +111,13 @@ chrome.runtime.onMessage.addListener(
 function savePageLocation(url, newScrollY){
     console.group('Save page location');
     // check If page is already saved
-    var query = $locations.findOne({url: url});
+    var query = $sites.findOne({url: url});
     if(query && newScrollY != query.scrollY){
 
        console.log('url exists and location is diferent. UPDATE');
        query.lastScrollY = query.scrollY;
        query.scrollY = newScrollY;
-       $locations.update(query);
+       $sites.update(query);
     }
 
     // If it's a new page && it's being tracked then let's save it
@@ -125,7 +125,7 @@ function savePageLocation(url, newScrollY){
     var isPageBeingTracked = isPageTracked(url);
     if(!query && isPageBeingTracked){
         console.log('A new entry it is. INSERT NEW');
-        $locations.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
+        $sites.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
     }
 
     console.log('isPageBeingTracked: ', isPageBeingTracked);
@@ -138,7 +138,7 @@ function savePageLocation(url, newScrollY){
  * @param  {[string]} url 
  */
 function trackPage(url){
-    $tracked_pages.insertOne({page_url: url});
+    $sites.insertOne({'url': url});
     console.group('Track page');
     console.log('tracking: ', url);
     console.groupEnd();
@@ -151,8 +151,7 @@ function trackPage(url){
  * @param  {[url]} url 
  */
 function untrackPage(url){
-    $tracked_pages.removeWhere({page_url: url});
-    $locations.removeWhere({url: url});
+    $sites.removeWhere({'url': url});
     console.group('Untrack page');
     console.log('untracked: ', url);
     console.groupEnd();
@@ -166,7 +165,7 @@ function untrackPage(url){
  * @return {Boolean}     
  */
 function isPageTracked(url){
-    var query = $tracked_pages.findOne({page_url: url});
+    var query = $sites.findOne({'url': url});
     if(query) return true;
 
     // If page is not being tracked
