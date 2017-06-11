@@ -1,7 +1,7 @@
 
 // get background page ref && get current tab url
-var BG, TAB_URL;
-chrome.runtime.getBackgroundPage(bg => { BG = bg });
+let TAB_URL;
+const $bg = chrome.extension.getBackgroundPage();
 
 
 
@@ -9,12 +9,12 @@ chrome.runtime.getBackgroundPage(bg => { BG = bg });
 console.group('Manage visuals according with tracking status of page');
 // get current tab and set url var
 chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-    
-	TAB_URL = BG.getCleanUrl(tabs[0].url);
+
+	TAB_URL = $bg.getCleanUrl(tabs[0].url);
 	console.log('tab url: ', TAB_URL);
 
 	// check if TAB_URL is being tracked or not
-	if(BG.isPageTracked(TAB_URL)){
+	if($bg.isPageTracked(TAB_URL)){
 		console.log('Current tab is being tracked.');
 		document.getElementById('untrack').style.display = 'block';
 	}else{
@@ -41,14 +41,14 @@ function doPage(e){
     switch(e.target.id){
     	case 'track':
     		// use track func from background page ref
-    		BG.trackPage(TAB_URL);
+    		$bg.trackPage(TAB_URL);
     		document.getElementById('untrack').style.display = 'block';
     		document.getElementById('track').style.display = 'none';
     	break;
 
     	case 'untrack':
     		// send request to untrack page to background script
-    		BG.untrackPage(TAB_URL);
+    		$bg.untrackPage(TAB_URL);
     		document.getElementById('untrack').style.display = 'none';
     		document.getElementById('track').style.display = 'block';
     	break;
