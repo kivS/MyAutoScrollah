@@ -12,7 +12,7 @@
 	],
 
 	"browser_action": {
-	    "default_title": "ScrollahMe",
+	    "default_title": "Skrolly",
 	    "default_icon": {
 	    	"16":"images/icon_016.png",
 	    	"32":"images/icon_032.png"
