@@ -1,43 +1,34 @@
-console.log("hey there from background.js");
-
-
 // DB INIT
-var $locations;
-var $db = new loki('db.json',{
+let $sites;
+const $db = new loki('db.json',{
     env: 'BROWSER',
     verbose: true,
     autosave: true,
     autoload: true,
     autoloadCallback : function(){
-
         
-       $locations = $db.getCollection('locations');
-       $tracked_pages = $db.getCollection('tracked_pages');
+       $sites = $db.getCollection('sites');
 
        // If Collections are not present initialize them
-       if(!$locations) $locations = $db.addCollection('locations');
-       if(!$tracked_pages) $tracked_pages = $db.addCollection('tracked_pages');
-
+       if(!$sites) $sites = $db.addCollection('sites');
     },
 });
 
 // Show visual cue  to users when they change to current tab
 chrome.tabs.onActivated.addListener(r => {
-    // Get current tab's url
-    console.group('Visual Cues');
-   
+
+    // Get current tab's url   
     chrome.tabs.query({active:true}, t => {
-        var currentTabUrl = t[0].url;
-        // clean url
-        currentTabUrl = currentTabUrl.split('#')[0];
-        console.log('Current Tab url: ', currentTabUrl);
+
+        // get cleaned url
+        const currentTabUrl = getCleanUrl(t[0].url);
 
         if(isPageTracked(currentTabUrl)){
-            console.log('Page is being tracked...');
+            console.log(`On tab activated - Page [${currentTabUrl}] is being tracked...`);
             setBadgeOn();
 
         }else{
-            console.log('Page not tracked...');
+            console.log(`On tab activated - Page [${currentTabUrl}] not tracked...`);
             setBadgeOff();
         }
     });
@@ -50,7 +41,7 @@ chrome.tabs.onActivated.addListener(r => {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
   	//
-    console.group("Incoming messages");
+    console.group("BG: Incoming messages");
     console.log('Request: ', request);
     console.log('Sender: ', sender);
     console.groupEnd();
@@ -60,12 +51,9 @@ chrome.runtime.onMessage.addListener(
     switch(request.what){
     	case "START_BOT":
     		// check If page is already saved
-            var query = $locations.findOne({url: request.url});  
+            const query = $sites.findOne({url: request.url});  
             if(query){
-                
-                console.group('Saved page query result');
-                console.log('Query: ', query);
-                console.groupEnd();
+                console.log('START_BOT - query result: ', query);
 
                 // Send back info to be scrolled
                 sendResponse({
@@ -73,6 +61,9 @@ chrome.runtime.onMessage.addListener(
                     newScrollY: query.scrollY,
                     oldScrollY: query.lastScrollY
                 });
+
+
+                setBadgeOn();
                 break;
             }
             
@@ -81,7 +72,7 @@ chrome.runtime.onMessage.addListener(
 
         case "ECHO_ECHO":
             // Get page location when user leaves tab or closes the page and save it..
-            console.group('Page location to be saved');
+            console.group('ECHO_ECHO - save location of site:');
             console.log('URL: ', request.url);
             console.log('ScrollY: ', request.scrollY);
             console.groupEnd();
@@ -103,28 +94,28 @@ chrome.runtime.onMessage.addListener(
 
 /**
  * Saves pages location to the DB
- * @param  {[type]} url        --> url of page
- * @param  {[type]} newScrollY --> new page Y location
  * 
  */
-function savePageLocation(url, newScrollY){
+function savePageLocation(url: string, newScrollY: number){
     console.group('Save page location');
-    // check If page is already saved
-    var query = $locations.findOne({url: url});
-    if(query && newScrollY != query.scrollY){
+   
+    let query = $sites.findOne({url: url});
 
+     // check If page is already saved
+    if(query && newScrollY != query.scrollY){
        console.log('url exists and location is diferent. UPDATE');
        query.lastScrollY = query.scrollY;
        query.scrollY = newScrollY;
-       $locations.update(query);
+       $sites.update(query);
     }
 
     // If it's a new page && it's being tracked then let's save it
     // 
-    var isPageBeingTracked = isPageTracked(url);
+    const isPageBeingTracked = isPageTracked(url);
+
     if(!query && isPageBeingTracked){
         console.log('A new entry it is. INSERT NEW');
-        $locations.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
+        $sites.insertOne({url:url, scrollY: newScrollY, lastScrollY: 0});
     }
 
     console.log('isPageBeingTracked: ', isPageBeingTracked);
@@ -137,10 +128,8 @@ function savePageLocation(url, newScrollY){
  * @param  {[string]} url 
  */
 function trackPage(url){
-    $tracked_pages.insertOne({page_url: url});
-    console.group('Track page');
+    $sites.insertOne({'url': url});
     console.log('tracking: ', url);
-    console.groupEnd();
     setBadgeOn();
     
 }
@@ -150,11 +139,8 @@ function trackPage(url){
  * @param  {[url]} url 
  */
 function untrackPage(url){
-    $tracked_pages.removeWhere({page_url: url});
-    $locations.removeWhere({url: url});
-    console.group('Untrack page');
+    $sites.removeWhere({'url': url});
     console.log('untracked: ', url);
-    console.groupEnd();
     setBadgeOff();
 
 }
@@ -164,13 +150,23 @@ function untrackPage(url){
  * @param  {[url]}  url 
  * @return {Boolean}     
  */
-function isPageTracked(url){
-    var query = $tracked_pages.findOne({page_url: url});
+function isPageTracked(url: string): boolean{
+    const query = $sites.findOne({'url': url});
     if(query) return true;
 
     // If page is not being tracked
     return false;
 }
+
+
+/**
+ * Get a clean and static url
+ */
+function getCleanUrl(url: string): string {
+
+    return url.split('#')[0];
+}
+
 
 /**
  * Changes badge's text to ON && color to green

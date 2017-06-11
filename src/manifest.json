@@ -1,9 +1,10 @@
 {
 	"manifest_version": 2,
-	"name": "My AutoScroller",
+	"name": "__MSG_appName__",
 	"version": "1.0",
+	"default_locale": "en",
 
-	"description": "Will save your page location and scroll for you the next time you visit it",
+	"description": "__MSG_appDescription__",
 
 	"permissions": [
 	    "storage",
@@ -11,7 +12,7 @@
 	],
 
 	"browser_action": {
-	    "default_title": "ScrollahMe",
+	    "default_title": "Skrolly",
 	    "default_icon": {
 	    	"16":"images/icon_016.png",
 	    	"32":"images/icon_032.png"
@@ -30,7 +31,12 @@
 	      "js": ["content.js"],
 	      "run_at": "document_idle"
 	    }
-	]
+	],
+
+	"options_ui": {
+		"page": "options.html",
+		"chrome_style": true
+	}
 
 	
 }
