@@ -1,4 +1,3 @@
-console.log("Hello world /... not! from popup");
 
 // get background page ref && get current tab url
 var BG, TAB_URL;
@@ -10,7 +9,7 @@ chrome.runtime.getBackgroundPage(bg => { BG = bg });
 console.group('Manage visuals according with tracking status of page');
 // get current tab and set url var
 chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-	TAB_URL = tabs[0].url.split('#')[0];
+	TAB_URL = BG.getCleanUrl(tabs[0].url);
 	console.log('tab url: ', TAB_URL);
 
 	// check if TAB_URL is being tracked or not

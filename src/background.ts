@@ -1,9 +1,6 @@
-console.log("hey there from background.js");
-
-
 // DB INIT
 let $sites;
-var $db = new loki('db.json',{
+const $db = new loki('db.json',{
     env: 'BROWSER',
     verbose: true,
     autosave: true,
@@ -25,9 +22,10 @@ chrome.tabs.onActivated.addListener(r => {
     console.group('Visual Cues');
    
     chrome.tabs.query({active:true}, t => {
-        var currentTabUrl = t[0].url;
-        // clean url
-        currentTabUrl = currentTabUrl.split('#')[0];
+
+        // get cleaned url
+        const currentTabUrl = getCleanUrl(t[0].url);
+        
         console.log('Current Tab url: ', currentTabUrl);
 
         if(isPageTracked(currentTabUrl)){
@@ -112,8 +110,8 @@ function savePageLocation(url, newScrollY){
     console.group('Save page location');
     // check If page is already saved
     var query = $sites.findOne({url: url});
-    if(query && newScrollY != query.scrollY){
 
+    if(query && newScrollY != query.scrollY){
        console.log('url exists and location is diferent. UPDATE');
        query.lastScrollY = query.scrollY;
        query.scrollY = newScrollY;
@@ -164,13 +162,23 @@ function untrackPage(url){
  * @param  {[url]}  url 
  * @return {Boolean}     
  */
-function isPageTracked(url){
+function isPageTracked(url: string): boolean{
     var query = $sites.findOne({'url': url});
     if(query) return true;
 
     // If page is not being tracked
     return false;
 }
+
+
+/**
+ * Get a clean and static url
+ */
+function getCleanUrl(url: string): string {
+
+    return url.split('#')[0];
+}
+
 
 /**
  * Changes badge's text to ON && color to green
