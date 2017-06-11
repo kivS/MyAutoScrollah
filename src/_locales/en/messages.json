@@ -1,0 +1,22 @@
+{
+    "appName": {
+        "message": "Skrolly",
+        "description": "name of app"
+    },
+
+    "appDescription": {
+        "message": "Will save your page location and scroll for you automatically the next time you visit it",
+        "description": "description of app"
+    },
+
+    "untrackBtn": {
+        "message": "Untrack page",
+        "description": "Popup - innerHtml of untrack button"
+    },
+
+    "trackBtn": {
+        "message": "Track page",
+        "description": "Popup - innerHtml of track button"
+    }
+
+}

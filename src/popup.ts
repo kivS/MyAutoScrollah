@@ -16,9 +16,11 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs => {
 	// check if TAB_URL is being tracked or not
 	if($bg.isPageTracked(TAB_URL)){
 		console.log('Current tab is being tracked.');
+        document.getElementById('untrack').innerHTML = chrome.i18n.getMessage('untrackBtn');
 		document.getElementById('untrack').style.display = 'block';
 	}else{
 		console.log('Current tab is not being tracked..');
+        document.getElementById('track').innerHTML = chrome.i18n.getMessage('trackBtn');
 		document.getElementById('track').style.display = 'block';
 	}
 	
