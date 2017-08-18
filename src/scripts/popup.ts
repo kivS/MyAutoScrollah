@@ -1,31 +1,36 @@
-
-// get background page ref && get current tab url
 let TAB_URL;
-const $bg: any = chrome.extension.getBackgroundPage();
+let $bg: any;
+
+// manage track/untrack btns display acording to the current page url
+new Promise((resolve) => {
+    // get background page
+    $bg = chrome.extension.getBackgroundPage();
+
+    console.group('Manage visuals according with tracking status of page');
+    // get current tab and set url var
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+
+        TAB_URL = $bg.getCleanUrl(tabs[0].url);
+        console.log('tab url: ', TAB_URL);
+
+        // check if TAB_URL is being tracked or not
+        if($bg.isPageTracked(TAB_URL)){
+            console.log('Current tab is being tracked.');
+            document.getElementById('untrack').innerHTML = chrome.i18n.getMessage('untrackBtn');
+            document.getElementById('untrack').style.display = 'block';
+            resolve(1);
+        }else{
+            console.log('Current tab is not being tracked..');
+            document.getElementById('track').innerHTML = chrome.i18n.getMessage('trackBtn');
+            document.getElementById('track').style.display = 'block';
+            resolve(1);
+        }
+        
+    });
+    console.groupEnd(); 
+})
 
 
-
-// Manage visuals according with whether the page is being tracked or not
-console.group('Manage visuals according with tracking status of page');
-// get current tab and set url var
-chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-
-	TAB_URL = $bg.getCleanUrl(tabs[0].url);
-	console.log('tab url: ', TAB_URL);
-
-	// check if TAB_URL is being tracked or not
-	if($bg.isPageTracked(TAB_URL)){
-		console.log('Current tab is being tracked.');
-        document.getElementById('untrack').innerHTML = chrome.i18n.getMessage('untrackBtn');
-		document.getElementById('untrack').style.display = 'block';
-	}else{
-		console.log('Current tab is not being tracked..');
-        document.getElementById('track').innerHTML = chrome.i18n.getMessage('trackBtn');
-		document.getElementById('track').style.display = 'block';
-	}
-	
-});
-console.groupEnd(); 
 
 
 // Get btn 
