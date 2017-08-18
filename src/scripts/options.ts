@@ -21,11 +21,15 @@ if($sites.data.length > 0){
 
         //  Data column - site url
         let td_site_url = document.createElement("TD");
-        let td_text = document.createTextNode(site.url);
-        td_site_url.appendChild(td_text);
+        // create link element
+        let site_link = document.createElement("A");
+        site_link['text'] = site.url;
+        site_link['href'] = site.url;
+        td_site_url.appendChild(site_link);
 
         // Data column - site delete action
         let td_del_action = document.createElement("TD");
+        // del btn
         let btnDel = document.createElement("BUTTON");
         btnDel.textContent = chrome.i18n.getMessage('btnDelete');
         btnDel.className = 'btnDelete';
@@ -36,6 +40,7 @@ if($sites.data.length > 0){
         tr.appendChild(td_site_url);
         tr.appendChild(td_del_action);
 
+        // append table row to the table
         document.getElementById("pageList").appendChild(tr);
     }) 
 
