@@ -20,7 +20,7 @@
     },
 
     "optionsNoSitesMsg": {
-        "message": "You're not tracking any page",
+        "message": "You're not tracking any pages... yet!",
         "description": "options page - Message for when there's no site being tracked"
     },
 
