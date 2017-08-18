@@ -1,7 +1,7 @@
 
 // get background page ref && get current tab url
 let TAB_URL;
-const $bg = chrome.extension.getBackgroundPage();
+const $bg: any = chrome.extension.getBackgroundPage();
 
 
 

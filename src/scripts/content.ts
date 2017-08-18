@@ -86,11 +86,20 @@ function getPageUrl(): string{
  * Force page to scroll..
  */
 function forceScroll(y: number){
-	setTimeout(() => {
+	
+	if(scrollY != y){
+		window.scrollTo(0, y);
+	}
+	
+
+	// make sure it scrolled..
+ 	const force_scroll_timeout = setTimeout(() => {
+
+ 		// clear timeout
+ 		clearTimeout(force_scroll_timeout);
 		
 		if(scrollY != y){
-			window.scrollTo(0, y);
-			console.debug('I was forced to scroll yo..');
+			// it scroll is not correct
 			// To the rabbit hole we go
 			forceScroll(y);
 		}

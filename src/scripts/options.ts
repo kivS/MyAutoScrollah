@@ -2,7 +2,7 @@
 // get table caption
 document.getElementById("pageListCaption").innerHTML = chrome.i18n.getMessage('pageListTableCaption');
 
-const BG = chrome.extension.getBackgroundPage();
+const BG: any = chrome.extension.getBackgroundPage();
 
 // get db $sites
 const $sites = BG.$db.getCollection('sites');

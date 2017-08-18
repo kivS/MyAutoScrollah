@@ -1,5 +1,7 @@
 // DB INIT
 let $sites;
+
+declare var loki: any;
 const $db = new loki('db.json',{
     env: 'BROWSER',
     verbose: true,

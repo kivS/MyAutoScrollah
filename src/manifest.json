@@ -23,14 +23,14 @@
 	},
 
 	"background": {
-	   "scripts": ["libs/lokijs.min.js","background.js"],
+	   "scripts": ["scripts/libs/lokijs.min.js","scripts/background.js"],
 	   "persistent": false
 	},
 
 	"content_scripts": [
 	    {
 	      "matches": ["http://*/*", "https://*/*", "file:///*"],
-	      "js": ["content.js"],
+	      "js": ["scripts/content.js"],
 	      "run_at": "document_idle"
 	    }
 	],
