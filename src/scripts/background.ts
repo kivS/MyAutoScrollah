@@ -48,12 +48,14 @@ chrome.runtime.onMessage.addListener(
     console.log('Sender: ', sender);
     console.groupEnd();
     //
-   
+    
+    // get clean request url
+    const request_url = getCleanUrl(request.url)
     // 
     switch(request.what){
     	case "START_BOT":
     		// check If page is already saved
-            const query = $sites.findOne({url: request.url});  
+            const query = $sites.findOne({url: request_url});  
             if(query){
                 console.log('START_BOT - query result: ', query);
 
@@ -75,11 +77,11 @@ chrome.runtime.onMessage.addListener(
         case "ECHO_ECHO":
             // Get page location when user leaves tab or closes the page and save it..
             console.group('ECHO_ECHO - save location of site:');
-            console.log('URL: ', request.url);
+            console.log('URL: ', request_url);
             console.log('ScrollY: ', request.scrollY);
             console.groupEnd();
 
-            savePageLocation(request.url, request.scrollY);
+            savePageLocation(request_url, request.scrollY);
 
         break;
 
@@ -166,7 +168,7 @@ function isPageTracked(url: string): boolean{
  */
 function getCleanUrl(url: string): string {
 
-    return url.split('#')[0];
+    return url.split(/[#?]/)[0];
 }
 
 
