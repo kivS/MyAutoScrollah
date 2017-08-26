@@ -11,7 +11,7 @@ BUILD_DIR = 'build'
 FILE_EXT_TO_IGNORE = ('.sketch')
 
 if not(os.path.exists(f'{BUILD_DIR}')):
-    print('Creating build directory..')
+    print('Creating build directory..\n')
     # create build dir
     os.mkdir(f'./{BUILD_DIR}')
 else:
